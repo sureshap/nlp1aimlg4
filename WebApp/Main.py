@@ -18,7 +18,7 @@ def view(model):
 
    
 
-placeholder = st.container():
+placeholder = st.container()
 
 # Replace the placeholder with some text:
 placeholder.text("Hello")
