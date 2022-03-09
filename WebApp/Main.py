@@ -39,4 +39,4 @@ with placeholder.container():
      st.write("This is another")
 
 # Clear all those elements:
-placeholder.empty()
+#placeholder.empty()
