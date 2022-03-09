@@ -4,7 +4,7 @@
 import streamlit as st
 ################ Model ################
 class Model:
-   caption = "This is some text"
+   caption = "Hello World"
 ################ View  ################
 def view(model):
    st.write(model.caption)
