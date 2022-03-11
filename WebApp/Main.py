@@ -2,6 +2,9 @@
 # A simple model/view template for Streamlit #
 ##############################################
 import streamlit as st
+
+from googletrans import Translator
+
 ################ Model ################
 class Model:
     caption = "Hello World"
@@ -11,14 +14,23 @@ class Model:
     
 ###################### View  ################
 
+def Translate_text(input_text):
+  translator = Translator()
+  try:
+    trans_text = translator.translate(input_text).text
+  except Exception as e:
+    print(e)
+    trans_text = input_text
+  return trans_text
 
 def assignTicket(shortdesc,desc,caller):
     assignment_group = 'Default'
     info = "Shortdesc :" + shortdesc + "\n" \
-           "Description :" + desc + "\n" \
+           "Description :" + desc + "\n"  \
            "Caller :" + caller  
  
     return assignment_group, info
+
 
 def view(model):   
     #st.title(model.Heading1)
@@ -38,7 +50,7 @@ def view(model):
         #Textbox for text user is entering
         
         st.subheader("Enter the ticket details")
-        st.text("Enter the ticket details for the ticket to be assigned to L3 team.")
+        st.text("Enter the ticket details for automatic assignment to L3 team.")
         
         input_shortdesc = st.text_input('Short Description',value = "", key="txt_shortdesc") #text is stored in this variable
         input_desc = st.text_area('Description',value = "", key="txa_desc") #text is stored in this variable        
@@ -54,9 +66,12 @@ def view(model):
            
     
         if submit_button1:
+            
             assignment_group, info = assignTicket(input_shortdesc,input_desc,input_caller)
+            
             st.success("Assigned group :" +  assignment_group)
             st.success("Ticket Info :" +  info)
+            st.success("Translated input :" + Translate_text(info) )
             
         if clear_button1:
             pass
@@ -70,6 +85,12 @@ def view(model):
             
             
     # Side Menu content
+
+    from PIL import Image
+    image = Image.open('ProblemSolving.jpg')
+
+    st.sidebar.image(image, caption='FixITApp')
+    
     st.sidebar.subheader("About App")
     st.sidebar.text("NLP Ticket assignment App with Streamlit")
   	
