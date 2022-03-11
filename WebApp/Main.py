@@ -85,12 +85,14 @@ def view(model):
             
             
     # Side Menu content
-
-    from PIL import Image
-    image = Image.open('ProblemSolving.jpg')
-
-    st.sidebar.image(image, caption='FixITApp')
+    try:
+        from PIL import Image
+        image = Image.open('ProblemSolving.jpg')
     
+        st.sidebar.image(image, caption='FixITApp')
+    except Exception as e:
+        print(e)
+
     st.sidebar.subheader("About App")
     st.sidebar.text("NLP Ticket assignment App with Streamlit")
   	
