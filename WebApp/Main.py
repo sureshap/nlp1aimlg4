@@ -24,7 +24,7 @@ from nltk.tokenize import word_tokenize
 
 from pathlib import Path
 
-import sklearn
+#import sklearn
 import pickle
 
 
