@@ -37,6 +37,7 @@ class Model:
     SubHeading1 = "Automatic Ticket Assignment Tool"
     SubHeading2 = "What type of NLP service would you like to use?"
     
+    app_image_path = Path(__file__).parents[1] / 'WebApp/ProblemSolving.jpg'
 
     pkl_model_path = Path(__file__).parents[1] / 'WebApp/saved_model3_lr.pkl'
     pkl_vectorizer_path = Path(__file__).parents[1] / 'WebApp/count_vectorizer.pkl'
@@ -204,7 +205,7 @@ def view(model):
     # Side Menu content
     try:
         from PIL import Image
-        image = Image.open('ProblemSolving.jpg')
+        image = Image.open(Model.app_image_path)
     
         st.sidebar.image(image, caption='FixITApp')
     except Exception as e:
