@@ -22,8 +22,11 @@ from nltk.stem import WordNetLemmatizer
 #from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 
+from pathlib import Path
+
 import sklearn
 import pickle
+
 
 #import joblib
 
@@ -33,6 +36,11 @@ class Model:
     Heading1 = "Automatic Ticket Assignment Tool"
     SubHeading1 = "Automatic Ticket Assignment Tool"
     SubHeading2 = "What type of NLP service would you like to use?"
+    
+
+    pkl_model_path = Path(__file__).parents[1] / 'WebApp/saved_model3_lr.pkl'
+    pkl_vectorizer_path = Path(__file__).parents[1] / 'WebApp/count_vectorizer.pkl'
+    pkl_le_path = Path(__file__).parents[1] / 'WebApp/label_encoder.pkl'
     
 ###################### View  ################
 
@@ -124,20 +132,12 @@ def assignTicket(input_shortdesc,input_desc,input_caller):
     
     info = process_text
     
-    from pathlib import Path
-
-    pkl_model_path = Path(__file__).parents[1] / 'WebApp/saved_model3_lr.pkl'
-    pkl_vectorizer_path = Path(__file__).parents[1] / 'WebApp/count_vectorizer.pkl'
-    pkl_le_path = Path(__file__).parents[1] / 'WebApp/label_encoder.pkl'
-    st.write(pkl_model_path)
-    st.write(pkl_vectorizer_path)
     
-    print(pkl_model_path)
    
    # Call the model
-    pickled_model = pickle.load(open(pkl_model_path, 'rb'))
+    pickled_model = pickle.load(open(Model.pkl_model_path, 'rb'))
     print("Model pickled retrieved")
-    pickled_vectorizer = pickle.load(open(pkl_vectorizer_path, 'rb'))
+    pickled_vectorizer = pickle.load(open(Model.pkl_vectorizer_path, 'rb'))
     print("Vector pickled retrieved")
     print(process_text)
     X_prod_bow = pickled_vectorizer.transform(process_text)
@@ -145,7 +145,7 @@ def assignTicket(input_shortdesc,input_desc,input_caller):
     y_pred = pickled_model.predict(X_prod_bow)
     #y_pred = ""
     print("y_pred", y_pred)
-    pickled_le = pickle.load(open(pkl_le_path, 'rb'))
+    pickled_le = pickle.load(open(Model.pkl_le_path, 'rb'))
     result_lbl_enc = pickled_le.inverse_transform(y_pred)
     assignment_group = result_lbl_enc[0]
     return assignment_group, info, result_lbl_enc
@@ -187,10 +187,8 @@ def view(model):
         if submit_button1:
             info = getInfo(input_shortdesc,input_desc,input_caller)
             assignment_group, message, result = assignTicket(input_shortdesc,input_desc,input_caller)
-            st.success("Ticket Info :" +  info)    
-            st.success(message)
-            st.success(result)            
-            st.success("Assignment group :" +assignment_group)
+            st.success("Ticket Info :" +  info)              
+            st.success("Ticket to be assigned to Group :" +assignment_group)
 
         if clear_button1:
             pass
