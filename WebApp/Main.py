@@ -124,6 +124,11 @@ def assignTicket(input_shortdesc,input_desc,input_caller):
     
     info = process_text
     
+    from pathlib import Path
+
+    pkl_path = Path(__file__).parents[1] / 'WebApp/saved_model3_lr.pkl'
+    st.write(pkl_path)
+    print(pkl_path)
    
    # Call the model
     pickled_model = pickle.load(open("saved_model3_lr.pkl", 'rb'))
