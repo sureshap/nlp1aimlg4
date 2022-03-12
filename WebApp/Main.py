@@ -22,7 +22,7 @@ from nltk.stem import WordNetLemmatizer
 #from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 
-#import sklearn
+import sklearn
 import pickle
 
 #import joblib
