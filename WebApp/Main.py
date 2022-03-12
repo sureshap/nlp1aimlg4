@@ -131,15 +131,16 @@ def assignTicket(input_shortdesc,input_desc,input_caller):
     print(pkl_model_path)
    
    # Call the model
-    pickled_model = pickle.load(open(pkl_model_path, 'rb'))
+    #pickled_model = pickle.load(open(pkl_model_path, 'rb'))
     print("Model pickled retrieved")
     pickled_vectorizer = pickle.load(open("count_vectorizer.pkl", 'rb'))
     print("Vector pickled retrieved")
     print(process_text)
     X_prod_bow = pickled_vectorizer.transform(process_text)
     print("Bow data", X_prod_bow)
-    y_pred = pickled_model.predict(X_prod_bow)
+    #y_pred = pickled_model.predict(X_prod_bow)
     print("y_pred", y_pred)
+    y_pred = ""
     pickled_le = pickle.load(open("label_encoder.pkl", 'rb'))
     result_lbl_enc = pickled_le.inverse_transform(y_pred)
     assignment_group = result_lbl_enc[0]
