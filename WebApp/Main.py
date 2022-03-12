@@ -128,6 +128,7 @@ def assignTicket(input_shortdesc,input_desc,input_caller):
 
     pkl_model_path = Path(__file__).parents[1] / 'WebApp/saved_model3_lr.pkl'
     pkl_vectorizer_path = Path(__file__).parents[1] / 'WebApp/count_vectorizer.pkl'
+    pkl_le_path = Path(__file__).parents[1] / 'WebApp/label_encoder.pkl'
     st.write(pkl_model_path)
     st.write(pkl_vectorizer_path)
     
@@ -144,7 +145,7 @@ def assignTicket(input_shortdesc,input_desc,input_caller):
     y_pred = pickled_model.predict(X_prod_bow)
     #y_pred = ""
     print("y_pred", y_pred)
-    pickled_le = pickle.load(open("label_encoder.pkl", 'rb'))
+    pickled_le = pickle.load(open(pkl_le_path, 'rb'))
     result_lbl_enc = pickled_le.inverse_transform(y_pred)
     assignment_group = result_lbl_enc[0]
     return assignment_group, info, result_lbl_enc
