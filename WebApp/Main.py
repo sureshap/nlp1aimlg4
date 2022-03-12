@@ -126,12 +126,12 @@ def assignTicket(input_shortdesc,input_desc,input_caller):
     
     from pathlib import Path
 
-    pkl_path = Path(__file__).parents[1] / 'WebApp/saved_model3_lr.pkl'
-    st.write(pkl_path)
-    print(pkl_path)
+    pkl_model_path = Path(__file__).parents[1] / 'WebApp/saved_model3_lr.pkl'
+    st.write(pkl_model_path)
+    print(pkl_model_path)
    
    # Call the model
-    pickled_model = pickle.load(open("/app/nlp1aimlg4/WebApp/saved_model3_lr.pkl", 'rb'))
+    pickled_model = pickle.load(open(pkl_model_path, 'rb'))
     print("Model pickled retrieved")
     pickled_vectorizer = pickle.load(open("count_vectorizer.pkl", 'rb'))
     print("Vector pickled retrieved")
