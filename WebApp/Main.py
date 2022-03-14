@@ -32,10 +32,8 @@ import pickle
 
 ################ Model ################
 class Model:
-    caption = "Hello World"
     Heading1 = "Automatic Ticket Assignment Tool"
-    SubHeading1 = "Automatic Ticket Assignment Tool"
-    SubHeading2 = "What type of NLP service would you like to use?"
+    SubHeading1 = "What type of NLP service would you like to use?"
 
     # Path for Streamlit cloud implementations    
     app_image_path = Path(__file__).parents[1] / 'WebApp/ProblemSolving.jpg'
@@ -43,10 +41,6 @@ class Model:
     pkl_vectorizer_path = Path(__file__).parents[1] / 'WebApp/count_vectorizer.pkl'
     pkl_le_path = Path(__file__).parents[1] / 'WebApp/label_encoder.pkl'
     
-    st.write(pkl_model_path)
-    print(pkl_model_path)
-    
-
     
 ###################### View  ################
 
@@ -137,11 +131,7 @@ def assignTicket(input_shortdesc,input_desc,input_caller):
     process_text = process_input(text)
     
     info = process_text
-    
-    
-    st.write(Model.pkl_model_path)
-    print(Model.pkl_model_path)
-   
+       
    # Call the model
     pickled_model = pickle.load(open(Model.pkl_model_path, 'rb'))
     print("Model pickled retrieved")
@@ -156,13 +146,13 @@ def assignTicket(input_shortdesc,input_desc,input_caller):
     pickled_le = pickle.load(open(Model.pkl_le_path, 'rb'))
     result_lbl_enc = pickled_le.inverse_transform(y_pred)
     assignment_group = result_lbl_enc[0]
-    return assignment_group, info, result_lbl_enc
+    return assignment_group, y_pred
 
 
 def view(model):   
     #st.title(model.Heading1)
-    st.header(model.SubHeading1)
-    st.subheader(model.SubHeading2)
+    st.header(model.Heading1)
+    st.subheader(model.SubHeading1)
  
     def clear_form():
         st.session_state["txt_shortdesc"] = ""
@@ -194,8 +184,7 @@ def view(model):
     
         if submit_button1:
             info = getInfo(input_shortdesc,input_desc,input_caller)
-            assignment_group, message, result = assignTicket(input_shortdesc,input_desc,input_caller)
-            st.success("Ticket Info :" +  info)              
+            assignment_group, result = assignTicket(input_shortdesc,input_desc,input_caller)       
             st.success("Ticket to be assigned to Group :" +assignment_group)
 
         if clear_button1:
