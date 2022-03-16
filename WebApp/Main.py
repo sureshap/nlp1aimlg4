@@ -3,32 +3,17 @@
 ##############################################
 import streamlit as st
 
-import unicodedata  # Replace accented encoding characters 
-from googletrans import Translator # translate given text to English text
-import re # Text pre-processing
 
-
-# Import stop words list from NLTK
-import nltk
-nltk.download('stopwords')
-from nltk.corpus import stopwords # Import stop words
-
-
-nltk.download('punkt')
-nltk.download('wordnet')
-nltk.download('omw-1.4')
-
-from nltk.stem import WordNetLemmatizer
-#from nltk.stem import PorterStemmer
-from nltk.tokenize import word_tokenize
+import pandas as pd
 
 from pathlib import Path
 
-#import sklearn
+# User defined class for doing input preprocessing
+from ExperimentalTransformer import ExperimentalTransformer
+
 import pickle
 
-
-#import joblib
+#from sklearn.pipeline import Pipeline
 
 ################ Model ################
 class Model:
@@ -37,110 +22,22 @@ class Model:
 
     # Path for Streamlit cloud implementations    
     app_image_path = Path(__file__).parents[1] / 'WebApp/ProblemSolving.jpg'
-    pkl_model_path = Path(__file__).parents[1] / 'WebApp/saved_model3_lr.pkl'
-    pkl_vectorizer_path = Path(__file__).parents[1] / 'WebApp/count_vectorizer.pkl'
     pkl_le_path = Path(__file__).parents[1] / 'WebApp/label_encoder.pkl'
+    pkl_pipeline_path = Path(__file__).parents[1] / 'WebApp/saved_pipeline_lr.pkl'    
     
     
 ###################### View  ################
 
-def remove_whitespace_CR(input_text):
-    # Replace white space characters with space
-    process_text = input_text.replace(r'\n',' '). replace(r'_x000D_',' ')
-    return process_text
-
-# Replace accented encoding characters
-# Using normalize function returns the conventional form for the Unicode string unistr. 
-# The valid values for form are ‘NFC’, ‘NFKC’, ‘NFD’, and ‘NFKD’.
-def remove_accents(input_text):
-  try:
-      process_text = unicode(input_text, 'utf-8')
-  except (TypeError, NameError): # unicode is a default on python 3 
-      process_text = input_text
-  process_text = unicodedata.normalize('NFC', process_text)
-  process_text = process_text.encode('ascii', 'ignore')
-  process_text = process_text.decode("utf-8")
-  return str(process_text)
-
-def Translate_text(input_text):
-  translator = Translator()
-  try:
-    trans_text = translator.translate(input_text).text
-  except Exception as e:
-    print(e)
-    trans_text = input_text
-  return trans_text
-
-def preprocess_text(input_text):
-  # convert column to string
-  process_text=str(input_text)
-  # Select only alphabets
-  process_text = (re.sub('[^A-Za-z]+', ' ', process_text))
-  # Convert text to lowercase
-  process_text = process_text.lower()
-  # Strip unwanted spaces
-  process_text = process_text.strip()
-  return process_text
-
-def preprocess_vocab(input_text):
-    stop_words=set(stopwords.words('english'))
-    #stem=PorterStemmer()
-    lem=WordNetLemmatizer()
-
-    words=[w for w in word_tokenize(input_text) if (w not in stop_words)]
-    words=[lem.lemmatize(w) for w in words if len(w)>2]
-
-
-    process_text = ''
-    for i, val in enumerate(words):
-        process_text = process_text + ' ' + val
-
-    process_text = [process_text]
-    
-    return  process_text
-
-
-def getInfo(shortdesc,desc,caller):
-
-    info = "Shortdesc :" + shortdesc + "\n" \
-           "Description :" + desc + "\n"  \
-           "Caller :" + caller  
- 
-    return info
-
-def process_input(input_text):
-    #print("##########################Inside process input##########################")
-    process_text = remove_whitespace_CR(input_text)
-    #print("Inside process input -after remove_whitespace_CR",process_text )
-    process_text = remove_accents(process_text)
-    #print("Inside process input -after remove_accents",process_text )    
-    process_text = Translate_text(process_text)
-    #print("Inside process input -after Translate_text",process_text )
-    process_text = preprocess_text(process_text)
-    #print("Inside process input -after Preprocessing",process_text )   
-    process_text = preprocess_vocab(process_text)
-    #print("Inside process input -after Vocab Preprocessing",process_text )   
-    #print("##########################nside process input completed##########################")
-    return process_text
-
-
 def assignTicket(input_shortdesc,input_desc,input_caller):
-    assignment_group = "Model under construction"
+
     text = input_shortdesc + input_desc
-    
-    process_text = process_input(text)
-    
-    info = process_text
        
    # Call the model
-    pickled_model = pickle.load(open(Model.pkl_model_path, 'rb'))
-    print("Model pickled retrieved")
-    pickled_vectorizer = pickle.load(open(Model.pkl_vectorizer_path, 'rb'))
-    print("Vector pickled retrieved")
-    print(process_text)
-    X_prod_bow = pickled_vectorizer.transform(process_text)
-    print("Bow data", X_prod_bow)
-    y_pred = pickled_model.predict(X_prod_bow)
+    pickled_pipleine = pickle.load(open(Model.pkl_pipeline_path, 'rb'))
+    print("Pipleline pickled retrieved")
+    X_prod = pd.Series(text)
+    X_prod = ExperimentalTransformer.preprocess_input(X_prod)
+    y_pred = pickled_pipleine.predict(X_prod)
     #y_pred = ""
     print("y_pred", y_pred)
     pickled_le = pickle.load(open(Model.pkl_le_path, 'rb'))
@@ -183,7 +80,6 @@ def view(model):
            
     
         if submit_button1:
-            info = getInfo(input_shortdesc,input_desc,input_caller)
             assignment_group, result = assignTicket(input_shortdesc,input_desc,input_caller)       
             st.success("Ticket to be assigned to Group :" +assignment_group)
 
@@ -208,7 +104,7 @@ def view(model):
         print(e)
 
     st.sidebar.subheader("About App")
-    st.sidebar.text("NLP Ticket assignment App with Streamlit")
+    st.sidebar.text("NLP Ticket assignment App")
   	
     
     st.sidebar.subheader("By")
