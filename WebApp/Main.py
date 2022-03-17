@@ -9,7 +9,7 @@ import pandas as pd
 from pathlib import Path
 
 # User defined class for doing input preprocessing
-from ExperimentalTransformer import ExperimentalTransformer
+from InputTransformer import InputTransformer
 
 import pickle
 
@@ -36,7 +36,7 @@ def assignTicket(input_shortdesc,input_desc,input_caller):
     pickled_pipleine = pickle.load(open(Model.pkl_pipeline_path, 'rb'))
     print("Pipleline pickled retrieved")
     X_prod = pd.Series(text)
-    X_prod = ExperimentalTransformer.preprocess_input(X_prod)
+    X_prod = InputTransformer.preprocess_input(X_prod)
     y_pred = pickled_pipleine.predict(X_prod)
     #y_pred = ""
     print("y_pred", y_pred)
