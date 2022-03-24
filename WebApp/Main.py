@@ -23,7 +23,7 @@ class Model:
     # Path for Streamlit cloud implementations    
     app_image_path = Path(__file__).parents[1] / 'WebApp/ProblemSolving.jpg'
     pkl_le_path = Path(__file__).parents[1] / 'WebApp/label_encoder.pkl'
-    pkl_pipeline_path = Path(__file__).parents[1] / 'WebApp/saved_pipeline_lr.pkl'    
+    pkl_pipeline_path = Path(__file__).parents[1] / 'WebApp/saved_pipeline_SVM.pkl'    
     
     
 ###################### View  ################
@@ -81,18 +81,9 @@ def view(model):
     
         if submit_button1:
             assignment_group, result = assignTicket(input_shortdesc,input_desc,input_caller)       
-            st.success("Ticket to be assigned to Group :" +assignment_group)
+            st.success("Ticket to be assigned to Group : " +assignment_group)
 
-        if clear_button1:
-            pass
-            #input_text.clear()
-            #st.text_area('Ticket to be assigned',value = "", key="text_area2")
-            #with textareacol1:  
-                #input_text = st.text_area('Ticket to be assigned',value = "", key="text_area2") #text is stored in this variable
-  
-    #if st.checkbox("Show Tokens and Lemma"):
-        #st.subheader("Tokenize Your Text")
-            
+
             
     # Side Menu content
     try:
